@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>STESEN 5: TANGKAP & KUMPUL - Peranan Bahasa Kebangsaan</title>
+    <!-- Tailwind CSS for utility-first styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for playful and ultra-legible typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        * {
+            font-family: 'Fredoka', 'Nunito', sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+        }
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+            overflow-x: hidden;
+            margin: 0;
+            padding: 0;
+        }
+        .glow-title {
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.7), 0 4px 0 #b45309;
+        }
+        .card-pop {
+            animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .pulse-btn {
+            animation: pulseGlow 1.8s infinite;
+        }
+        @keyframes pulseGlow {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 15px rgba(34, 197, 94, 0.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 25px rgba(34, 197, 94, 0.9); }
+        }
+        .key-btn {
+            box-shadow: 0 4px 0 #1d4ed8;
+            transition: all 0.1s ease;
+        }
+        .key-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #1d4ed8;
+        }
+        .shake-screen {
+            animation: screenShake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+        }
+        @keyframes screenShake {
+            10%, 90% { transform: translate3d(-2px, 0, 0); }
+            20%, 80% { transform: translate3d(4px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+            40%, 60% { transform: translate3d(6px, 0, 0); }
+        }
+    </style>
+</head>
+<body class="min-h-screen text-white flex flex-col items-center justify-between p-2 sm:p-4 select-none overflow-hidden">
+
+    <!-- HEADER / STATS BAR -->
+    <header class="w-full max-w-4xl flex flex-wrap justify-between items-center bg-indigo-950/85 backdrop-blur border-2 border-indigo-400/40 rounded-2xl p-2.5 sm:p-3 mb-1 shadow-xl z-20">
+        <div class="flex items-center space-x-2 sm:space-x-3">
+            <div class="bg-amber-400 text-indigo-950 font-black px-2.5 py-1 rounded-xl text-xs sm:text-sm border-2 border-amber-200 shadow">
+                STESEN 5
+            </div>
+            <div>
+                <h1 class="text-sm sm:text-xl font-black text-amber-300 tracking-wide leading-tight">TANGKAP & KUMPUL</h1>
+                <p class="text-[10px] sm:text-xs text-indigo-200 font-semibold">Misi Peranan Bahasa Kebangsaan (Tahun 5)</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-2 sm:space-x-3 mt-1 sm:mt-0">
+            <!-- Document Counter -->
+            <div class="bg-indigo-900/90 px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl border border-indigo-400/40 flex items-center gap-1">
+                <span class="text-xs text-indigo-300 font-bold">📁</span>
+                <span id="docCountText" class="text-amber-400 font-black text-sm sm:text-base">0/5</span>
+            </div>
+            <!-- Hearts -->
+            <div id="livesContainer" class="flex gap-1 text-base sm:text-xl bg-red-950/60 px-2.5 py-1 rounded-xl border border-red-500/40">
+                <span>❤️</span><span>❤️</span><span>❤️</span>
+            </div>
+            <!-- Timer -->
+            <div class="bg-amber-950/60 px-2.5 py-1 rounded-xl border border-amber-500/50 font-mono text-amber-300 font-bold text-xs sm:text-base flex items-center gap-1">
+                ⏱ <span id="timerText">00:45</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- INSTRUCTION BANNER & CLUES TRACKER -->
+    <div class="w-full max-w-4xl bg-indigo-950/75 rounded-xl p-2 mb-2 border border-indigo-500/30 flex flex-col sm:flex-row items-center justify-between gap-1.5 shadow-inner z-20 relative">
+        <div class="text-[11px] sm:text-xs font-black text-amber-300 uppercase tracking-wider flex items-center gap-1">
+            <span>🏛️</span> ARAHAN:
+            <span class="text-white font-bold ml-1">TANGKAP: Dokumen, Borang & Surat berkaitan <u class="text-amber-300 font-black">KERAJAAN</u>!</span>
+        </div>
+        <div id="cluesBox" class="flex flex-wrap gap-1 justify-center sm:justify-end flex-1">
+            <span class="text-[10px] sm:text-xs bg-indigo-900/50 text-indigo-400/60 px-2 py-0.5 rounded-lg border border-indigo-700/50 italic">[Dokumen 1]</span>
+            <span class="text-[10px] sm:text-xs bg-indigo-900/50 text-indigo-400/60 px-2 py-0.5 rounded-lg border border-indigo-700/50 italic">[Dokumen 2]</span>
+            <span class="text-[10px] sm:text-xs bg-indigo-900/50 text-indigo-400/60 px-2 py-0.5 rounded-lg border border-indigo-700/50 italic">[Dokumen 3]</span>
+            <span class="text-[10px] sm:text-xs bg-indigo-900/50 text-indigo-400/60 px-2 py-0.5 rounded-lg border border-indigo-700/50 italic">[Dokumen 4]</span>
+            <span class="text-[10px] sm:text-xs bg-indigo-900/50 text-indigo-400/60 px-2 py-0.5 rounded-lg border border-indigo-700/50 italic">[Dokumen 5]</span>
+        </div>
+
+        <!-- TOP BANNER NOTIFICATION (Non-intrusive feedback) -->
+        <div id="topNotificationBar" class="hidden absolute left-1/2 -translate-x-1/2 top-full mt-1.5 px-4 py-2 rounded-2xl border-2 font-black text-xs sm:text-sm shadow-2xl z-40 text-center transition-all duration-300 card-pop whitespace-nowrap">
+            <!-- Dynamic feedback message -->
+        </div>
+    </div>
+
+    <!-- MAIN GAMEPLAY & SCREEN CONTAINERS -->
+    <main id="mainContainer" class="w-full max-w-4xl flex-1 relative flex flex-col items-center justify-center min-h-[460px] sm:min-h-[520px]">
+
+        <!-- SCREEN 1: START SCREEN -->
+        <div id="startScreen" class="w-full h-full bg-indigo-900/95 border-4 border-amber-400 rounded-3xl p-5 sm:p-8 flex flex-col items-center justify-center text-center shadow-2xl card-pop z-20">
+            <div class="text-5xl sm:text-7xl mb-3 animate-bounce">📁</div>
+            <h2 class="text-2xl sm:text-4xl font-black text-amber-300 mb-1 glow-title">STESEN 5: TANGKAP & KUMPUL</h2>
+            <h3 class="text-lg sm:text-2xl font-extrabold text-white mb-4">Misi Peranan Bahasa Kebangsaan</h3>
+
+            <div class="bg-indigo-950/90 p-4 sm:p-5 rounded-2xl border-2 border-indigo-400/50 max-w-lg mb-6 shadow-inner text-left space-y-3">
+                <p class="text-xs sm:text-base text-amber-200 font-bold text-center leading-relaxed">
+                    "Misi kamu: Seret bakul dokumen ke kiri & kanan menggunakan <span class="text-amber-300 underline">JARI</span> atau tetikus. BACA teks pada kad dan tangkap 5 dokumen berkaitan <span class="text-amber-300 font-black underline">KERAJAAN</span>!"
+                </p>
+                <div class="bg-indigo-900/80 p-2.5 rounded-xl border border-indigo-500/40 text-xs text-indigo-100 font-semibold text-center">
+                    ⚠️ <span class="text-amber-300 font-bold">PERATURAN:</span> Semua kad berwarna pastel neutral. Tiada pop-up mengganggu! Maklum balas muncul di <span class="text-amber-300 font-bold">BANNER ATAS SKRIN</span>.
+                </div>
+                <div class="flex justify-center gap-3 pt-1 text-xs sm:text-sm font-black text-indigo-200">
+                    <span class="bg-indigo-900 px-3 py-1.5 rounded-xl border border-indigo-400/40">❤️ 3 NYAWA</span>
+                    <span class="bg-indigo-900 px-3 py-1.5 rounded-xl border border-indigo-400/40">⏱ 45 SAAT</span>
+                    <span class="bg-indigo-900 px-3 py-1.5 rounded-xl border border-indigo-400/40">📁 5 DOKUMEN</span>
+                </div>
+            </div>
+
+            <button id="startBtn" onclick="startGame()" class="pulse-btn bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-black text-xl sm:text-2xl px-10 py-4 rounded-2xl border-b-4 border-green-800 shadow-xl transition-all cursor-pointer">
+                🚀 MULA MISI
+            </button>
+        </div>
+
+        <!-- SCREEN 2: GAMEPLAY CATCHING ARENA -->
+        <div id="gameScreen" class="hidden relative w-full h-[460px] sm:h-[520px] bg-slate-950/95 rounded-3xl overflow-hidden border-4 border-indigo-500/60 shadow-2xl touch-none">
+            
+            <!-- Game Canvas for falling cards, particles & basket -->
+            <canvas id="gameCanvas" class="absolute inset-0 w-full h-full"></canvas>
+
+            <!-- Red Flash Overlay for Wrong Catch -->
+            <div id="redFlash" class="hidden absolute inset-0 bg-red-600/30 pointer-events-none z-20"></div>
+
+            <!-- Modal Overlay ONLY for Game Over / Completion Transition -->
+            <div id="gameModalOverlay" class="hidden absolute inset-0 bg-slate-950/85 backdrop-blur-sm z-30 flex flex-col items-center justify-center p-4 text-center">
+                <div id="modalBox" class="bg-indigo-900 border-4 border-amber-400 p-6 rounded-3xl max-w-sm w-full shadow-2xl card-pop flex flex-col items-center">
+                    <div id="modalIcon" class="text-5xl mb-2">🎉</div>
+                    <h3 id="modalTitle" class="text-2xl sm:text-3xl font-black text-amber-300 mb-2">MISI SELESAI!</h3>
+                    <p id="modalDesc" class="text-sm font-bold text-indigo-100 mb-4">Petunjuk berjaya diperoleh</p>
+                    <button id="modalBtn" class="bg-amber-400 hover:bg-amber-300 text-indigo-950 font-black px-6 py-3 rounded-xl border-b-4 border-amber-600 shadow-lg text-base cursor-pointer">
+                        TERUSKAN
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: CABARAN 1 - BONGKAR ISI -->
+        <div id="cabaran1Screen" class="hidden w-full bg-indigo-900/95 border-4 border-amber-400 rounded-3xl p-4 sm:p-6 flex flex-col items-center justify-between text-center shadow-2xl card-pop z-20 min-h-[460px]">
+            <div class="w-full">
+                <div class="bg-amber-400 text-indigo-950 font-black text-xs px-4 py-1 rounded-full inline-block mb-2 uppercase tracking-wide border border-amber-200">
+                    Cabaran 1: Bongkar ISI
+                </div>
+                
+                <!-- Static Introductory Context Phrase -->
+                <h3 class="text-lg sm:text-2xl font-black text-amber-300 mb-1">
+                    "Bahasa kebangsaan ialah Bahasa..."
+                </h3>
+                <p class="text-xs sm:text-sm text-indigo-200 font-bold mb-3">
+                    Lengkapkan tempat kosong dengan mengeja perkataan yang betul:
+                </p>
+
+                <!-- Collected Clues Grid -->
+                <div id="cluesSummaryGrid" class="grid grid-cols-2 sm:grid-cols-5 gap-2 mb-4 max-w-3xl mx-auto">
+                    <!-- Dynamic Clues -->
+                </div>
+
+                <!-- Word Fill Slots: P _ N _ _ D B _ _ A N -->
+                <div class="bg-indigo-950/90 p-4 rounded-2xl border-2 border-indigo-400/50 mb-3 shadow-inner max-w-xl mx-auto">
+                    <div id="isiSlotsContainer" class="flex gap-1 sm:gap-2 flex-wrap justify-center items-center">
+                        <!-- Letter slots generated dynamically -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyboard Area -->
+            <div id="isiKeyboardArea" class="w-full max-w-xl mb-1">
+                <p class="text-xs text-indigo-200 font-bold mb-2">Ketik huruf untuk melengkapkan ejaan:</p>
+                <div id="isiKeyboard" class="flex flex-wrap justify-center gap-1 sm:gap-1.5">
+                    <!-- Dynamic shuffled keys -->
+                </div>
+            </div>
+
+            <!-- Next Step Button -->
+            <div id="toCabaran2Container" class="hidden my-2">
+                <button onclick="goToCabaran2()" class="pulse-btn bg-gradient-to-r from-emerald-500 to-green-600 hover:from-emerald-400 hover:to-green-500 text-white font-black text-lg sm:text-xl px-8 py-3.5 rounded-2xl border-b-4 border-green-800 shadow-xl cursor-pointer">
+                    SETERUSNYA: CABARAN HURAIAN ➔
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: CABARAN 2 - BONGKAR HURAIAN -->
+        <div id="cabaran2Screen" class="hidden w-full bg-indigo-900/95 border-4 border-amber-400 rounded-3xl p-4 sm:p-6 flex flex-col items-center justify-between text-center shadow-2xl card-pop z-20 min-h-[460px]">
+            <div class="w-full">
+                <div class="bg-amber-400 text-indigo-950 font-black text-xs px-4 py-1 rounded-full inline-block mb-2 uppercase tracking-wide border border-amber-200">
+                    Cabaran 2: Bongkar HURAIAN
+                </div>
+                
+                <!-- Static Introductory Context Phrase -->
+                <h3 class="text-lg sm:text-2xl font-black text-amber-300 mb-1">
+                    "Bahasa kebangsaan digunakan dalam..."
+                </h3>
+                <p class="text-xs sm:text-sm text-indigo-200 font-bold mb-4">
+                    Lengkapkan huraian di bawah dengan melengkapkan huruf-huruf yang hilang:
+                </p>
+
+                <!-- Unified Word Fill Area (SINGLE LINE): U R _ S A _   R A _ M I   K E _ A J _ A N -->
+                <div class="bg-indigo-950/90 p-4 sm:p-5 rounded-2xl border-2 border-indigo-400/50 max-w-3xl mx-auto mb-3 text-center shadow-inner overflow-x-auto">
+                    <div id="huraianSlotsContainer" class="flex flex-nowrap gap-1 sm:gap-1.5 justify-center items-center min-w-max mx-auto px-2">
+                        <!-- Single line dynamic slots for URUSAN RASMI KERAJAAN -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyboard Area -->
+            <div id="huraianKeyboardArea" class="w-full max-w-xl mb-1">
+                <p class="text-xs text-amber-300 font-black mb-2">Pilih huruf yang betul untuk melengkapkan huraian:</p>
+                <div id="huraianKeyboard" class="flex flex-wrap justify-center gap-1 sm:gap-1.5">
+                    <!-- Dynamic shuffled keys -->
+                </div>
+            </div>
+
+            <!-- Button To Final Screen -->
+            <div id="toFinalScreenContainer" class="hidden my-2">
+                <button onclick="showFinalSummaryScreen()" class="pulse-btn bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-indigo-950 font-black text-lg sm:text-xl px-8 py-3.5 rounded-2xl border-b-4 border-amber-800 shadow-xl cursor-pointer">
+                    LIHAT RUMUSAN AKHIR 🏆 ➔
+                </button>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: SKRIN AKHIR KEKAL (PERSISTENT & STATIC FOR NOTE-TAKING) -->
+        <div id="finalSummaryScreen" class="hidden w-full bg-gradient-to-b from-indigo-900 via-indigo-950 to-slate-950 border-4 border-amber-400 rounded-3xl p-6 sm:p-8 flex flex-col items-center text-center shadow-2xl card-pop z-20">
+            <div class="text-5xl sm:text-7xl mb-2 animate-bounce">🏆</div>
+            <h2 class="text-3xl sm:text-5xl font-black text-amber-300 mb-2 glow-title">MISI SELESAI!</h2>
+
+            <div class="bg-indigo-900/90 border-2 border-amber-400 p-5 sm:p-6 rounded-2xl max-w-xl w-full text-left my-4 shadow-2xl space-y-4">
+                <div class="border-b border-indigo-700/80 pb-3">
+                    <span class="text-xs font-black text-amber-400 uppercase tracking-widest block mb-1">ISI (PERANAN):</span>
+                    <p class="text-xl sm:text-3xl font-black text-white">Bahasa Pentadbiran</p>
+                </div>
+                <div>
+                    <span class="text-xs font-black text-amber-400 uppercase tracking-widest block mb-1">HURAIAN:</span>
+                    <p class="text-base sm:text-xl font-bold text-indigo-100 leading-relaxed">
+                        Bahasa kebangsaan digunakan dalam urusan rasmi kerajaan.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Copy Instruction -->
+            <div class="bg-amber-500/20 border-2 border-amber-400/60 p-3.5 rounded-2xl max-w-xl w-full mb-6 flex items-center gap-3">
+                <span class="text-3xl">✏️</span>
+                <p class="text-xs sm:text-sm font-extrabold text-amber-200 text-left leading-snug">
+                    <span class="text-amber-300 underline">ARAHAN:</span> SALIN <span class="text-white">ISI</span> DAN <span class="text-white">HURAIAN</span> DI ATAS KE DALAM <span class="text-amber-300">KAD INFO KUMPULAN</span> KAMU.
+                </p>
+            </div>
+
+            <button onclick="resetWholeGame()" class="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-black text-lg sm:text-xl px-10 py-3.5 rounded-2xl border-b-4 border-blue-900 shadow-xl cursor-pointer">
+                🔄 MAIN SEMULA
+            </button>
+        </div>
+
+    </main>
+
+    <footer class="text-center text-xs text-indigo-300/60 mt-2 font-semibold">
+        Stesen 5: Tangkap & Kumpul &copy; Bahasa Melayu Tahun 5
+    </footer>
+
+    <script>
+        // Web Audio API Synthesizer (Zero external audio file dependency)
+        class SoundFX {
+            constructor() {
+                this.ctx = null;
+            }
+            init() {
+                if (!this.ctx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.ctx = new AudioContext();
+                }
+            }
+            playCatchCorrect() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, idx) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(freq, now + idx * 0.04);
+                    gain.gain.setValueAtTime(0.2, now + idx * 0.04);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.04 + 0.2);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + idx * 0.04);
+                    osc.stop(now + idx * 0.04 + 0.2);
+                });
+            }
+            playWrong() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const osc = this.ctx.createOscillator();
+                const gain = this.ctx.createGain();
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(180, now);
+                osc.frequency.linearRampToValueAtTime(80, now + 0.25);
+                gain.gain.setValueAtTime(0.25, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+                osc.connect(gain);
+                gain.connect(this.ctx.destination);
+                osc.start(now);
+                osc.stop(now + 0.25);
+            }
+            playVictory() {
+                if (!this.ctx) return;
+                const now = this.ctx.currentTime;
+                const notes = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99];
+                notes.forEach((freq, i) => {
+                    const osc = this.ctx.createOscillator();
+                    const gain = this.ctx.createGain();
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(freq, now + i * 0.08);
+                    gain.gain.setValueAtTime(0.2, now + i * 0.08);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + i * 0.08 + 0.35);
+                    osc.connect(gain);
+                    gain.connect(this.ctx.destination);
+                    osc.start(now + i * 0.08);
+                    osc.stop(now + i * 0.08 + 0.35);
+                });
+            }
+        }
+
+        const sfx = new SoundFX();
+
+        // Exact cards as per specification
+        const correctCards = [
+            "Surat Rasmi Kerajaan",
+            "Borang Cukai",
+            "Pekeliling Awam",
+            "Warta Kerajaan",
+            "Laporan Jabatan",
+            "Lesen Memandu"
+        ];
+
+        const distractorCards = [
+            "Resit Pasar Raya",
+            "Tiket Wayang",
+            "Nota Kedai Runcit",
+            "Yuran Kelab Sukan",
+            "Kupon Diskaun"
+        ];
+
+        let lives = 3;
+        let timerSeconds = 45;
+        let timerInterval = null;
+        let collectedDocuments = [];
+        let isGamePaused = false;
+        let notificationTimeout = null;
+
+        let canvas, ctx;
+        let basket = {
+            x: 0,
+            y: 0,
+            width: 130,
+            height: 52
+        };
+
+        let fallingCards = [];
+        let particles = [];
+        let spawnTimer = 0;
+        let isDragging = false;
+
+        window.addEventListener('load', () => {
+            canvas = document.getElementById('gameCanvas');
+            ctx = canvas.getContext('2d');
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            const arena = document.getElementById('gameScreen');
+
+            const handleMove = (clientX) => {
+                const rect = canvas.getBoundingClientRect();
+                const xInCanvas = clientX - rect.left;
+                basket.x = Math.max(0, Math.min(xInCanvas - basket.width / 2, canvas.width - basket.width));
+            };
+
+            arena.addEventListener('pointerdown', (e) => {
+                isDragging = true;
+                handleMove(e.clientX);
+            });
+
+            arena.addEventListener('pointermove', (e) => {
+                if (isDragging || e.buttons === 1) {
+                    handleMove(e.clientX);
+                }
+            });
+
+            arena.addEventListener('pointerup', () => { isDragging = false; });
+            arena.addEventListener('pointercancel', () => { isDragging = false; });
+        });
+
+        function resizeCanvas() {
+            if (!canvas) return;
+            const rect = canvas.parentElement.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+            basket.y = canvas.height - 62;
+            basket.x = (canvas.width - basket.width) / 2;
+        }
+
+        function startGame() {
+            sfx.init();
+            lives = 3;
+            timerSeconds = 45;
+            collectedDocuments = [];
+            fallingCards = [];
+            particles = [];
+            isGamePaused = false;
+
+            updateLivesUI();
+            updateTimerUI();
+            updateDocCountUI();
+            updateCluesUI();
+
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('gameScreen').classList.remove('hidden');
+
+            resizeCanvas();
+
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                if (isGamePaused) return;
+                timerSeconds--;
+                updateTimerUI();
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeOut();
+                }
+            }, 1000);
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updateLivesUI() {
+            const container = document.getElementById('livesContainer');
+            let html = '';
+            for (let i = 0; i < 3; i++) {
+                if (i < lives) {
+                    html += '<span class="animate-pulse">❤️</span>';
+                } else {
+                    html += '<span class="opacity-30 grayscale">🖤</span>';
+                }
+            }
+            container.innerHTML = html;
+        }
+
+        function updateTimerUI() {
+            const timerEl = document.getElementById('timerText');
+            const secStr = timerSeconds < 10 ? `0${timerSeconds}` : `${timerSeconds}`;
+            timerEl.innerText = `00:${secStr}`;
+            if (timerSeconds <= 10) {
+                timerEl.classList.add('text-red-400', 'animate-ping');
+            } else {
+                timerEl.classList.remove('text-red-400', 'animate-ping');
+            }
+        }
+
+        function updateDocCountUI() {
+            document.getElementById('docCountText').innerText = `${collectedDocuments.length}/5`;
+        }
+
+        function updateCluesUI() {
+            const box = document.getElementById('cluesBox');
+            let html = '';
+            for (let i = 0; i < 5; i++) {
+                if (collectedDocuments[i]) {
+                    html += `<span class="text-[10px] sm:text-xs bg-amber-400 text-indigo-950 font-black px-2 py-0.5 rounded-lg shadow border border-amber-200 card-pop">${collectedDocuments[i]}</span>`;
+                } else {
+                    html += `<span class="text-[10px] sm:text-xs bg-indigo-900/50 text-indigo-400/60 px-2 py-0.5 rounded-lg border border-indigo-700/50 italic">[Dokumen ${i + 1}]</span>`;
+                }
+            }
+            box.innerHTML = html;
+        }
+
+        // NON-INTRUSIVE TOP BANNER NOTIFICATION (NO POPUPS DURING PLAY)
+        function showTopNotification(text, isSuccess = true) {
+            const bar = document.getElementById('topNotificationBar');
+            clearTimeout(notificationTimeout);
+
+            bar.className = `absolute left-1/2 -translate-x-1/2 top-full mt-1.5 px-4 py-2 rounded-2xl border-2 font-black text-xs sm:text-sm shadow-2xl z-40 text-center transition-all duration-300 card-pop whitespace-nowrap ${
+                isSuccess 
+                ? 'bg-emerald-950/95 border-emerald-400 text-emerald-200' 
+                : 'bg-red-950/95 border-red-500 text-red-200'
+            }`;
+
+            bar.innerHTML = text;
+            bar.classList.remove('hidden');
+
+            notificationTimeout = setTimeout(() => {
+                bar.classList.add('hidden');
+            }, 1800);
+        }
+
+        function spawnFallingCard() {
+            const uncollectedCorrect = correctCards.filter(c => !collectedDocuments.includes(c));
+            
+            let isCorrect = false;
+            let text = "";
+
+            if (uncollectedCorrect.length > 0 && Math.random() < 0.55) {
+                isCorrect = true;
+                text = uncollectedCorrect[Math.floor(Math.random() * uncollectedCorrect.length)];
+            } else {
+                isCorrect = false;
+                text = distractorCards[Math.floor(Math.random() * distractorCards.length)];
+            }
+
+            const cardWidth = Math.min(190, canvas.width * 0.45);
+            const posX = Math.random() * (canvas.width - cardWidth - 20) + 10;
+
+            fallingCards.push({
+                x: posX,
+                y: -60,
+                width: cardWidth,
+                height: 48,
+                speed: 0.9 + Math.random() * 0.35, // SLOW DROP SPEED FOR YEAR 5 READABILITY
+                text: text,
+                isCorrect: isCorrect
+            });
+        }
+
+        function updateFallingCards() {
+            spawnTimer++;
+            if (spawnTimer > 115) {
+                spawnFallingCard();
+                spawnTimer = 0;
+            }
+
+            for (let i = fallingCards.length - 1; i >= 0; i--) {
+                const card = fallingCards[i];
+                card.y += card.speed;
+
+                if (
+                    card.y + card.height >= basket.y &&
+                    card.y <= basket.y + basket.height &&
+                    card.x + card.width >= basket.x &&
+                    card.x <= basket.x + basket.width
+                ) {
+                    processCatch(card);
+                    fallingCards.splice(i, 1);
+                    continue;
+                }
+
+                if (card.y > canvas.height + 20) {
+                    fallingCards.splice(i, 1);
+                }
+            }
+        }
+
+        function processCatch(card) {
+            createExplosion(card.x + card.width / 2, card.y + card.height / 2, card.isCorrect);
+
+            if (card.isCorrect) {
+                sfx.playCatchCorrect();
+                if (!collectedDocuments.includes(card.text)) {
+                    collectedDocuments.push(card.text);
+                    updateDocCountUI();
+                    updateCluesUI();
+                }
+
+                if (collectedDocuments.length >= 5) {
+                    isGamePaused = true;
+                    clearInterval(timerInterval);
+                    sfx.playVictory();
+
+                    showModalOverlay(
+                        "🏆",
+                        "SEMUA DOKUMEN DIKUMPUL!",
+                        "Syabas! Kamu telah memperoleh 5/5 Dokumen Rasmi Kerajaan. Mari bongkar peranan bahasa kebangsaan!",
+                        "KE CABARAN AKHIR ➔",
+                        () => {
+                            startCabaran1();
+                        }
+                    );
+                } else {
+                    showTopNotification(`✨ TEPAT! (+1 Dokumen): <span class="text-amber-300 font-black">${card.text}</span>`, true);
+                }
+            } else {
+                sfx.playWrong();
+                lives--;
+                updateLivesUI();
+                flashRedScreen();
+                triggerScreenShake();
+
+                if (lives <= 0) {
+                    isGamePaused = true;
+                    clearInterval(timerInterval);
+                    showModalOverlay(
+                        "💥",
+                        "MISI GAGAL!",
+                        "Kamu telah mengumpulkan dokumen yang salah.",
+                        "CUBA LAGI 🔄",
+                        () => {
+                            startGame();
+                        }
+                    );
+                } else {
+                    showTopNotification(`⚠️ BUKAN PETUNJUK! <span class="text-white font-black">"${card.text}"</span> (-1 Nyawa)`, false);
+                }
+            }
+        }
+
+        function handleTimeOut() {
+            sfx.playWrong();
+            isGamePaused = true;
+            showModalOverlay(
+                "⏰",
+                "MASA TAMAT!",
+                "Kumpulkan 5 dokumen sebelum masa habis.",
+                "CUBA LAGI 🔄",
+                () => {
+                    startGame();
+                }
+            );
+        }
+
+        function flashRedScreen() {
+            const flash = document.getElementById('redFlash');
+            flash.classList.remove('hidden');
+            setTimeout(() => {
+                flash.classList.add('hidden');
+            }, 250);
+        }
+
+        function triggerScreenShake() {
+            const container = document.getElementById('mainContainer');
+            container.classList.add('shake-screen');
+            setTimeout(() => {
+                container.classList.remove('shake-screen');
+            }, 300);
+        }
+
+        function createExplosion(x, y, isCorrect) {
+            const colors = isCorrect ? ['#fbbf24', '#fef08a', '#38bdf8', '#ffffff'] : ['#ef4444', '#f87171', '#dc2626'];
+            for (let i = 0; i < 18; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const speed = 2 + Math.random() * 4;
+                particles.push({
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    radius: 3 + Math.random() * 3.5,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: 1,
+                    decay: 0.035 + Math.random() * 0.03
+                });
+            }
+        }
+
+        function showModalOverlay(icon, title, desc, btnText, callback) {
+            const overlay = document.getElementById('gameModalOverlay');
+            document.getElementById('modalIcon').innerText = icon;
+            document.getElementById('modalTitle').innerText = title;
+            document.getElementById('modalDesc').innerHTML = desc;
+
+            const btn = document.getElementById('modalBtn');
+            btn.innerText = btnText;
+            btn.onclick = () => {
+                overlay.classList.add('hidden');
+                if (callback) callback();
+            };
+            overlay.classList.remove('hidden');
+        }
+
+        function gameLoop() {
+            if (!document.getElementById('gameScreen').classList.contains('hidden')) {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                if (!isGamePaused) {
+                    updateFallingCards();
+                    updateParticles();
+                }
+
+                drawFallingCards();
+                drawBasket();
+                drawParticles();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        function drawBasket() {
+            ctx.save();
+            ctx.fillStyle = '#f59e0b';
+            ctx.strokeStyle = '#b45309';
+            ctx.lineWidth = 4;
+
+            ctx.beginPath();
+            ctx.roundRect(basket.x, basket.y, basket.width, basket.height, 12);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#fbbf24';
+            ctx.beginPath();
+            ctx.roundRect(basket.x + 10, basket.y - 10, 48, 12, [6, 6, 0, 0]);
+            ctx.fill();
+            ctx.stroke();
+
+            ctx.fillStyle = '#1e1b4b';
+            ctx.font = '900 13px Fredoka, sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('📁 FAIL DOKUMEN', basket.x + basket.width / 2, basket.y + 31);
+
+            ctx.restore();
+        }
+
+        function drawFallingCards() {
+            fallingCards.forEach(card => {
+                ctx.save();
+
+                // NEUTRAL PASTEL PAPER COLOR (NO RED/GREEN HINTS)
+                ctx.fillStyle = '#fef08a'; 
+                ctx.strokeStyle = '#ca8a04'; 
+                ctx.lineWidth = 2.5;
+
+                ctx.beginPath();
+                ctx.roundRect(card.x, card.y, card.width, card.height, 12);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.font = '14px Fredoka';
+                ctx.fillStyle = '#854d0e';
+                ctx.fillText('📄', card.x + 10, card.y + 28);
+
+                ctx.font = '900 11px Fredoka, sans-serif';
+                ctx.fillStyle = '#713f12';
+                ctx.textAlign = 'left';
+
+                let text = card.text;
+                if (text.length > 23) text = text.substring(0, 21) + '..';
+
+                ctx.fillText(text, card.x + 32, card.y + 28);
+                ctx.restore();
+            });
+        }
+
+        function updateParticles() {
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.decay;
+                if (p.alpha <= 0) particles.splice(i, 1);
+            }
+        }
+
+        function drawParticles() {
+            particles.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = Math.max(0, p.alpha);
+                ctx.fillStyle = p.color;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+            });
+        }
+
+        // Target Word: PENTADBIRAN
+        // Slots: P _ N _ _ D B _ _ A N
+        // Missing letters: E, T, A, I, R (5 missing letters)
+        const isiTemplate = [
+            { char: 'P', isBlank: false },
+            { char: 'E', isBlank: true },
+            { char: 'N', isBlank: false },
+            { char: 'T', isBlank: true },
+            { char: 'A', isBlank: true },
+            { char: 'D', isBlank: false },
+            { char: 'B', isBlank: false },
+            { char: 'I', isBlank: true },
+            { char: 'R', isBlank: true },
+            { char: 'A', isBlank: false },
+            { char: 'N', isBlank: false }
+        ];
+
+        const isiMissingLetters = ['E', 'T', 'A', 'I', 'R'];
+        let isiFound = {};
+
+        function startCabaran1() {
+            document.getElementById('gameScreen').classList.add('hidden');
+            document.getElementById('cabaran1Screen').classList.remove('hidden');
+
+            const cluesGrid = document.getElementById('cluesSummaryGrid');
+            cluesGrid.innerHTML = collectedDocuments.map(doc => `
+                <div class="bg-indigo-950/90 border border-amber-400/50 p-2 rounded-xl flex items-center justify-center gap-1 shadow">
+                    <span class="text-xs">📄</span>
+                    <span class="text-[10px] sm:text-xs font-black text-amber-200 leading-tight truncate">${doc}</span>
+                </div>
+            `).join('');
+
+            isiFound = {};
+            document.getElementById('toCabaran2Container').classList.add('hidden');
+            document.getElementById('isiKeyboardArea').classList.remove('hidden');
+
+            renderIsiSlots();
+            renderIsiKeyboard();
+        }
+
+        function renderIsiSlots() {
+            const container = document.getElementById('isiSlotsContainer');
+            container.innerHTML = '';
+
+            isiTemplate.forEach(item => {
+                const box = document.createElement('div');
+                box.className = "w-7 h-9 sm:w-9 sm:h-11 bg-indigo-950 border-2 border-amber-400 rounded-xl flex items-center justify-center font-black text-sm sm:text-xl shadow-inner";
+
+                if (!item.isBlank || isiFound[item.char]) {
+                    box.innerText = item.char;
+                    box.classList.add('text-amber-300', 'bg-indigo-800');
+                } else {
+                    box.innerText = '_';
+                    box.classList.add('text-indigo-400/50');
+                }
+                container.appendChild(box);
+            });
+        }
+
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function renderIsiKeyboard() {
+            const container = document.getElementById('isiKeyboard');
+            container.innerHTML = '';
+
+            // Missing: E, T, A, I, R + Distractors: K, M, L, S, G, U, O
+            const required = ['E', 'T', 'A', 'I', 'R'];
+            const distractors = ['K', 'M', 'L', 'S', 'G', 'U', 'O'];
+            const keysPool = shuffleArray([...required, ...distractors]);
+
+            keysPool.forEach(letter => {
+                const btn = document.createElement('button');
+                btn.className = "key-btn bg-blue-600 hover:bg-blue-500 text-white font-black text-xs sm:text-base w-8 h-9 sm:w-10 sm:h-11 rounded-xl flex items-center justify-center cursor-pointer";
+                btn.innerText = letter;
+
+                btn.onclick = () => guessIsiLetter(letter, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function guessIsiLetter(letter, btnElement) {
+            if (isiMissingLetters.includes(letter)) {
+                sfx.playCatchCorrect();
+                isiFound[letter] = true;
+                btnElement.classList.remove('bg-blue-600');
+                btnElement.classList.add('bg-green-600', 'pointer-events-none');
+                renderIsiSlots();
+
+                const isAllFound = isiMissingLetters.every(l => isiFound[l]);
+                if (isAllFound) {
+                    sfx.playVictory();
+                    document.getElementById('isiKeyboardArea').classList.add('hidden');
+                    document.getElementById('toCabaran2Container').classList.remove('hidden');
+
+                    showModalOverlay(
+                        "🌟",
+                        "TEPAT!",
+                        "ISI BERJAYA DIBONGKAR: <strong class='text-amber-300 text-xl sm:text-2xl block mt-1'>Bahasa Pentadbiran</strong>",
+                        "SETERUSNYA ➔",
+                        () => {}
+                    );
+                }
+            } else {
+                sfx.playWrong();
+                btnElement.classList.remove('bg-blue-600');
+                btnElement.classList.add('bg-red-600', 'opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function goToCabaran2() {
+            startCabaran2();
+        }
+
+        // Target Sentence: U R _ S A _   R A _ M I   K E _ A J _ A N
+        // Missing letters: U, N, S, R, A (With two 'A' buttons provided)
+        const huraianSentenceTemplate = [
+            // URUSAN
+            { c: 'U', isBlank: false },
+            { c: 'R', isBlank: false },
+            { c: 'U', isBlank: true, id: 'u1' },
+            { c: 'S', isBlank: false },
+            { c: 'A', isBlank: false },
+            { c: 'N', isBlank: true, id: 'n1' },
+            { c: ' ', isSpace: true },
+            // RASMI
+            { c: 'R', isBlank: false },
+            { c: 'A', isBlank: false },
+            { c: 'S', isBlank: true, id: 's1' },
+            { c: 'M', isBlank: false },
+            { c: 'I', isBlank: false },
+            { c: ' ', isSpace: true },
+            // KERAJAAN
+            { c: 'K', isBlank: false },
+            { c: 'E', isBlank: false },
+            { c: 'R', isBlank: true, id: 'r1' },
+            { c: 'A', isBlank: false },
+            { c: 'J', isBlank: false },
+            { c: 'A', isBlank: true, id: 'a1' },
+            { c: 'A', isBlank: false },
+            { c: 'N', isBlank: false }
+        ];
+
+        let huraianFound = {
+            'U': false,
+            'N': false,
+            'S': false,
+            'R': false,
+            'A': false
+        };
+
+        function startCabaran2() {
+            document.getElementById('cabaran1Screen').classList.add('hidden');
+            document.getElementById('cabaran2Screen').classList.remove('hidden');
+
+            huraianFound = {
+                'U': false,
+                'N': false,
+                'S': false,
+                'R': false,
+                'A': false
+            };
+
+            document.getElementById('toFinalScreenContainer').classList.add('hidden');
+            document.getElementById('huraianKeyboardArea').classList.remove('hidden');
+
+            renderHuraianSlots();
+            renderHuraianKeyboard();
+        }
+
+        function renderHuraianSlots() {
+            const container = document.getElementById('huraianSlotsContainer');
+            container.innerHTML = '';
+
+            huraianSentenceTemplate.forEach(item => {
+                if (item.isSpace) {
+                    const space = document.createElement('div');
+                    space.className = "w-2 sm:w-4 flex-shrink-0";
+                    container.appendChild(space);
+                    return;
+                }
+
+                const box = document.createElement('div');
+                box.className = "w-6 h-8 sm:w-8 sm:h-10 bg-indigo-950 border-2 border-amber-400 rounded-xl flex items-center justify-center font-black text-xs sm:text-lg shadow-inner flex-shrink-0";
+
+                if (!item.isBlank || huraianFound[item.c]) {
+                    box.innerText = item.c;
+                    box.classList.add('text-amber-300', 'bg-indigo-800');
+                } else {
+                    box.innerText = '_';
+                    box.classList.add('text-indigo-400/50');
+                }
+                container.appendChild(box);
+            });
+        }
+
+        function renderHuraianKeyboard() {
+            const container = document.getElementById('huraianKeyboard');
+            container.innerHTML = '';
+
+            // Required keys containing TWO 'A' buttons (A, A) and 'U':
+            const required = ['U', 'N', 'S', 'R', 'A', 'A'];
+            // 8 Distractors: M, K, L, T, B, G, P, D
+            const distractors = ['M', 'K', 'L', 'T', 'B', 'G', 'P', 'D'];
+            const keysPool = shuffleArray([...required, ...distractors]);
+
+            keysPool.forEach((letter, index) => {
+                const btn = document.createElement('button');
+                btn.className = "key-btn bg-amber-600 hover:bg-amber-500 text-white font-black text-xs sm:text-base w-8 h-9 sm:w-10 sm:h-11 rounded-xl flex items-center justify-center cursor-pointer";
+                btn.innerText = letter;
+
+                btn.onclick = () => guessHuraianLetter(letter, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function guessHuraianLetter(letter, btnElement) {
+            const validMissing = ['U', 'N', 'S', 'R', 'A'];
+
+            if (validMissing.includes(letter)) {
+                sfx.playCatchCorrect();
+                huraianFound[letter] = true;
+                btnElement.classList.remove('bg-amber-600');
+                btnElement.classList.add('bg-green-600', 'pointer-events-none');
+                renderHuraianSlots();
+
+                const isComplete = validMissing.every(l => huraianFound[l]);
+                if (isComplete) {
+                    sfx.playVictory();
+                    document.getElementById('huraianKeyboardArea').classList.add('hidden');
+                    document.getElementById('toFinalScreenContainer').classList.remove('hidden');
+
+                    showModalOverlay(
+                        "🎉",
+                        "HURAIAN LENGKAP!",
+                        "Bahasa kebangsaan digunakan dalam <strong class='text-amber-300'>URUSAN RASMI KERAJAAN</strong>.",
+                        "LIHAT RUMUSAN AKHIR 🏆",
+                        () => {
+                            showFinalSummaryScreen();
+                        }
+                    );
+                }
+            } else {
+                sfx.playWrong();
+                btnElement.classList.remove('bg-amber-600');
+                btnElement.classList.add('bg-red-600', 'opacity-50', 'pointer-events-none');
+            }
+        }
+
+        function showFinalSummaryScreen() {
+            document.getElementById('cabaran2Screen').classList.add('hidden');
+            document.getElementById('finalSummaryScreen').classList.remove('hidden');
+        }
+
+        function resetWholeGame() {
+            document.getElementById('finalSummaryScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
